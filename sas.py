@@ -1,7 +1,6 @@
 import re
 import json
 
-
 def generate_sample_sas_file(file_path):
     # Sample SAS code to generate
     sample_sas_code = """
@@ -77,8 +76,10 @@ def extract_sas_blocks(file_path, output_json):
     print(f"Extracted SAS blocks saved to {output_json}")
 
 
-# Run the test
-test_sas_file = "sample_test.sas"
-output_file = "extracted_sas_blocks.json"
+# Update with your file paths
+test_sas_file = "/path/to/your/input_file.sas"  # Replace with your actual file path
+output_file = "/path/to/your/output_file.json"  # Replace with your desired output path
+
+# Call functions to generate and extract blocks
 generate_sample_sas_file(test_sas_file)
 extract_sas_blocks(test_sas_file, output_file)
