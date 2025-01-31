@@ -1,47 +1,14 @@
 import re
 import json
 
-def generate_sample_sas_file(file_path):
-    # Sample SAS code to generate
-    sample_sas_code = """
-    proc sql;
-        create table work.test as
-        select * from sashelp.class;
-    quit;
+def generate_sas_file_from_link(file_path, sas_script_link):
+    # Read the SAS script from the given file link and write it to the specified file path
+    with open(sas_script_link, 'r', encoding='utf-8') as f:
+        sas_code = f.read()
 
-    data example;
-        set sashelp.class;
-        age2 = age * 2;
-    run;
-
-    proc means data=work.test;
-        var age;
-    run;
-
-    proc print data=work.test;
-    run;
-
-    proc freq data=sashelp.class;
-        tables age;
-    run;
-
-    proc sql noprint;
-        create table work.sum as
-        select mean(age) as avg_age from sashelp.class;
-    quit;
-
-    proc transpose data=sashelp.class out=transposed;
-    var age;
-    run;
-
-    %macro calculate_age(age);
-        %let new_age = %eval(&age * 2);
-        &new_age
-    %mend calculate_age;
-    """
-    # Write the sample SAS code to the given file path
+    # Write the content to the given SAS file path
     with open(file_path, 'w', encoding='utf-8') as f:
-        f.write(sample_sas_code)
+        f.write(sas_code)
 
 
 def extract_sas_blocks(file_path, output_json):
@@ -76,10 +43,11 @@ def extract_sas_blocks(file_path, output_json):
     print(f"Extracted SAS blocks saved to {output_json}")
 
 
-# Update with your file paths
-test_sas_file = "/path/to/your/input_file.sas"  # Replace with your actual file path
+# Update with your file paths and SAS script link
+test_sas_file = "/path/to/your/input_file.sas"  # Replace with your actual file path to save the SAS code
+sas_script_link = "/path/to/your/sas_script.sas"  # Replace with the link to your SAS script file
 output_file = "/path/to/your/output_file.json"  # Replace with your desired output path
 
-# Call functions to generate and extract blocks
-generate_sample_sas_file(test_sas_file)
+# Generate SAS file from link and extract blocks
+generate_sas_file_from_link(test_sas_file, sas_script_link)
 extract_sas_blocks(test_sas_file, output_file)
