@@ -1,16 +1,6 @@
 import re
 import json
 
-def generate_sas_file_from_link(file_path, sas_script_link):
-    # Read the SAS script from the given file link and write it to the specified file path
-    with open(sas_script_link, 'r', encoding='utf-8') as f:
-        sas_code = f.read()
-
-    # Write the content to the given SAS file path
-    with open(file_path, 'w', encoding='utf-8') as f:
-        f.write(sas_code)
-
-
 def extract_sas_blocks(file_path, output_json):
     # Define regex patterns for different SAS code blocks
     patterns = {
@@ -43,11 +33,9 @@ def extract_sas_blocks(file_path, output_json):
     print(f"Extracted SAS blocks saved to {output_json}")
 
 
-# Update with your file paths and SAS script link
-test_sas_file = "/path/to/your/input_file.sas"  # Replace with your actual file path to save the SAS code
+# Update with your file paths
 sas_script_link = "/path/to/your/sas_script.sas"  # Replace with the link to your SAS script file
 output_file = "/path/to/your/output_file.json"  # Replace with your desired output path
 
-# Generate SAS file from link and extract blocks
-generate_sas_file_from_link(test_sas_file, sas_script_link)
-extract_sas_blocks(test_sas_file, output_file)
+# Extract SAS blocks from the provided script and save to JSON
+extract_sas_blocks(sas_script_link, output_file)
