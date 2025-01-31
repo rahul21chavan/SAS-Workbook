@@ -11,7 +11,7 @@ def extract_sas_blocks_from_file(file_path, output_json):
         "proc_print": re.compile(r'(?i)(proc\s+print\s+data=.*?;.*?run;)', re.DOTALL),
         "proc_freq": re.compile(r'(?i)(proc\s+freq\s+data=.*?;.*?run;)', re.DOTALL),
         "proc_transpose": re.compile(r'(?i)(proc\s+transpose\s+data=.*?;.*?run;)', re.DOTALL),
-        "macro": re.compile(r'(?i)(%macro\s+\w+.*?%mend\s+\w+;)', re.DOTALL)
+        "macro": re.compile(r'(?i)(%macro\s+\w+.*?%mend\s+\w+;)', re.DOTALL)  # Macro block pattern
     }
 
     extracted_blocks = []
@@ -24,11 +24,20 @@ def extract_sas_blocks_from_file(file_path, output_json):
         print(f"Error reading the file: {e}")
         return
 
-    # Find and store all matches for each pattern
+    # Handle the entire macro block, if it exists
+    macro_pattern = r'(?i)(%macro\s+\w+.*?%mend\s+\w+;)'  # Match everything inside the macro
+
+    # Try to find the macro block if it's the entire script inside a macro
+    macro_match = re.search(macro_pattern, content, re.DOTALL)
+    if macro_match:
+        extracted_blocks.append({"macro": macro_match.group(0).strip()})
+
+    # Find and store other SAS blocks like PROC SQL, DATA, etc.
     for key, pattern in patterns.items():
-        matches = pattern.findall(content)
-        for match in matches:
-            extracted_blocks.append({key: match.strip()})
+        if key != "macro":  # Skip the macro pattern since it's already handled
+            matches = pattern.findall(content)
+            for match in matches:
+                extracted_blocks.append({key: match.strip()})
 
     # Save the extracted blocks to a JSON file
     try:
